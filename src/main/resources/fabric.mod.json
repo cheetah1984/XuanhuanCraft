@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "xuanhuancraft",
+  "version": "${version}",
+  "name": "XuanhuanCraft",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/xuanhuancraft/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.Cultivation.xuanhuancraft.client.XuanhuancraftDataGenerator"
+    ],
+    "client": [
+      "com.Cultivation.xuanhuancraft.client.XuanhuancraftClient"
+    ],
+    "main": [
+      "com.Cultivation.xuanhuancraft.Xuanhuancraft"
+    ]
+  },
+  "mixins": [
+    "xuanhuancraft.mixins.json",
+    {
+      "config": "xuanhuancraft.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
