@@ -9,6 +9,8 @@ public class Xuanhuancraft implements ModInitializer {
     public static String MOD_ID = "xuanhuancraft";
     @Override
     public void onInitialize() {
+        // TEMPORARY CODE!!!
+        // Should move this to their own EVENT Class
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             DataHandling.CreateDataIfMissing(handler.player);
         });

@@ -18,6 +18,8 @@ import java.util.Scanner;
 public class DataHandling {
     public static HashMap<PlayerEntity, Cultivation> DataList = new HashMap<>();
     private static final Logger LOGGER = LogUtils.getLogger();
+
+    // This method should run every time the player joins a world
     public static void CreateDataIfMissing(PlayerEntity player) {
         File data = new File(player.getUuid() + ".cult");
         try {
@@ -38,13 +40,14 @@ public class DataHandling {
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
     }
-
+    // Needs rework? Defaults are set in Cultivation Class
     public static void GenerateDefaults(PlayerEntity player) {
         if (!DataList.containsKey(player)) {
             DataList.put(player, new Cultivation());
         }
     }
 
+    // Both Save and Load methods are pretty self-explanatory, Caution when changing bc java file handling is a mess...
     public static void Save(PlayerEntity player) {
         String encode = Base64Util(SaveAndLoadHandling.GetDataOnString(player), true);
         try {
@@ -74,7 +77,9 @@ public class DataHandling {
 
         DataList.replace(player, SaveAndLoadHandling.StringToStats(Base64Util(Base64Data, false)));
     }
-
+    // Base64 Util for turning a string to base 64 and back to a string
+    // ENCODE = True
+    // DECODE = False
     public static String Base64Util(String input, boolean EncodeOrDecode) {
         if (EncodeOrDecode) {
             return Base64.getEncoder().encodeToString(input.getBytes());
