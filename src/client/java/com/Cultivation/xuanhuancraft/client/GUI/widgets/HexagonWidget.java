@@ -11,12 +11,14 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import org.apache.commons.codec.binary.Hex;
 import org.lwjgl.glfw.GLFW;
 
 public class HexagonWidget extends ClickableWidget
 {
+    private boolean isArrow = false;
     private Screen screen = MinecraftClient.getInstance().currentScreen;
     public HexagonWidget(int x, int y, int width, int height)
     {
@@ -41,8 +43,9 @@ public class HexagonWidget extends ClickableWidget
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && screen.getClass() == HexagonScreen.class)
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && screen.getClass() == HexagonScreen.class && isArrow==false)
         {
+            isArrow = true;
             HexagonScreen hexagonScreen = (HexagonScreen) screen;
             hexagonScreen.DrawArrows(this.getX(),this.getY(),this.getWidth(),this.getHeight());
         }

@@ -75,5 +75,10 @@ public class HexagonScreen extends Screen
         TransMitterWidget transMitterWidget = new TransMitterWidget(x,y,width, height);
         this.addDrawableChild(transMitterWidget);
     }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
+    }
 }
 
