@@ -1,10 +1,13 @@
 package com.Cultivation.xuanhuancraft.Data;
 
+import com.Cultivation.xuanhuancraft.DataStructures.AxialCordinate;
+import com.Cultivation.xuanhuancraft.DataStructures.Cultivation;
+import com.mojang.logging.LogUtils;
 import net.minecraft.entity.player.PlayerEntity;
-
-import java.math.BigInteger;
+import org.slf4j.Logger;
 
 public class SaveAndLoadHandling {
+    public static final Logger LOGGER = LogUtils.getLogger();
     // READ IF YOU WANT TO ADD A VARIABLE (MAKE SURE SAID VARIABLE IS STORED IN THE Cultivation CLASS)
     // To add a variable to be stored you need to add said variable to the string builder followed by a ','
     // Like 'result.append(DataHandling.DataList.get(player).[Variable you want to store]).append(",");'
@@ -19,11 +22,13 @@ public class SaveAndLoadHandling {
     // Turns a PlayerEntity Data Hasmap into a string for saving (its more convenient this way)
     public static String GetDataOnString(PlayerEntity player) {
         StringBuilder result = new StringBuilder();
-        result.append(DataHandling.DataList.get(player).Qi).append(",");
-        result.append(DataHandling.DataList.get(player).CurrentRealm).append(",");
-        result.append(DataHandling.DataList.get(player).CurrentReealmID).append(",");
-        result.append(DataHandling.DataList.get(player).QiCostToNextRealm).append(",");
-        result.append(DataHandling.DataList.get(player).BaseCost).append(",");
+        Cultivation cultivation = DataHandling.DataList.get(player);
+        result.append(cultivation.Qi).append(",");
+        for (int i = 0; i < cultivation.Grid.size(); i++)
+        {
+            result.append(cultivation.Grid.get(i).getX()).append("_");
+            result.append(cultivation.Grid.get(i).getY()).append("~");
+        }
         return result.toString();
     }
     // Turns a String back into Data
@@ -31,11 +36,16 @@ public class SaveAndLoadHandling {
         Cultivation cult = new Cultivation();
         String[] SplitData = data.split(",");
         cult.Qi = Double.valueOf(SplitData[0]);
-        cult.CurrentRealm = SplitData[1];
-        cult.CurrentReealmID = Integer.parseInt(SplitData[2]);
-        cult.QiCostToNextRealm = Double.valueOf(SplitData[3]);
-        cult.BaseCost = Integer.parseInt(SplitData[4]);
-
+        String[] splitGrid = SplitData[1].split("~");
+        for (String SplitGrid : splitGrid) {
+            LOGGER.info("{}", SplitGrid);
+            String[] cords = SplitGrid.split("_");
+            int x = Integer.parseInt(cords[0]);
+            int y = Integer.parseInt(cords[1]);
+            AxialCordinate axiom = new AxialCordinate(x, y);
+            cult.Grid.add(axiom);
+            LOGGER.info("({}, {})", x, y);
+        }
         return cult;
     }
 }

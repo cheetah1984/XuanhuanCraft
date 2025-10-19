@@ -1,5 +1,7 @@
 package com.Cultivation.xuanhuancraft.Data;
 
+import com.Cultivation.xuanhuancraft.DataStructures.AxialCordinate;
+import com.Cultivation.xuanhuancraft.DataStructures.Cultivation;
 import com.mojang.logging.LogUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import org.slf4j.Logger;
@@ -8,8 +10,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
@@ -44,6 +44,12 @@ public class DataHandling {
     public static void GenerateDefaults(PlayerEntity player) {
         if (!DataList.containsKey(player)) {
             DataList.put(player, new Cultivation());
+            Cultivation cult = DataList.get(player);
+            cult.Grid.add(new AxialCordinate(0, 1));
+            cult.Grid.add(new AxialCordinate(0, 0));
+            cult.Grid.add(new AxialCordinate(0, -1));
+            DataList.replace(player,cult);
+
         }
     }
 

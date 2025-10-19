@@ -34,6 +34,6 @@ public class RenderingHUD {
         // THIS HAS NO SCALING IT WILL LOOK TERRIBLE ON ANY OTHER SCREEN OTHER THAN 1980x1020p
         // (Specifically on GUI Scale 3)
         context.drawTexture(RenderLayer::getGuiTextured, outline, 0, 0, 0, 0, 100, 20, 100, 20);
-        context.drawText(client.textRenderer, "Qi: "+ DataHandling.DataList.get(client.player).Qi + "/" +  DataHandling.DataList.get(client.player).QiCostToNextRealm, 5, 6, 0xFFFFFFFF, false);
+        context.drawText(client.textRenderer, "Qi: "+ DataHandling.DataList.get(client.player).Qi, 5, 6, 0xFFFFFFFF, false);
     }
 }
