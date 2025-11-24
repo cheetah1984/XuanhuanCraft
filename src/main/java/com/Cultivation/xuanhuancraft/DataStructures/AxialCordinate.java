@@ -1,34 +1,45 @@
 package com.Cultivation.xuanhuancraft.DataStructures;
 
 public class AxialCordinate {
-    private int x;
-    private int y;
-    private CultivationTile tile;
+    private int a;
+    private int r;
+    private int c;
+    private String texture = "textures/gui/hexagon.png";
 
-    public AxialCordinate(int x, int y)
+    public AxialCordinate(int a, int r, int c)
     {
-        this.x = x;
-        this.y = y;
-    }
-    public AxialCordinate(int x, int y, CultivationTile tile)
-    {
-        this.x = x;
-        this.y = y;
-        this.tile = tile;
+        this.a = a;
+        this.r = r;
+        this.c = c;
     }
 
-    public int getX()
+    public AxialCordinate(int a, int r, int c, String texture)
     {
-        return this.x;
+        this.a = a;
+        this.r = r;
+        this.c = c;
+        this.texture = texture;
     }
 
-    public int getY()
+    public int getA()
     {
-        return this.y;
+        return this.a;
     }
 
-    public CultivationTile getTile()
+    public int getR()
     {
-        return this.tile;
+        return this.r;
+    }
+
+    public int getC()
+    {
+        return this.c;
+    }
+
+    public double[] ConvertToCartesian()
+    {
+        double x = 1.5 * this.a;
+        double y = Math.sqrt(3)/2 * this.a + Math.sqrt(3) * this.r;
+        return new double[]{x, y};
     }
 }

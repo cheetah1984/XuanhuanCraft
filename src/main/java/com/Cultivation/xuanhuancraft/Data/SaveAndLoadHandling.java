@@ -26,8 +26,9 @@ public class SaveAndLoadHandling {
         result.append(cultivation.Qi).append(",");
         for (int i = 0; i < cultivation.Grid.size(); i++)
         {
-            result.append(cultivation.Grid.get(i).getX()).append("_");
-            result.append(cultivation.Grid.get(i).getY()).append("~");
+            result.append(cultivation.Grid.get(i).getA()).append("_");
+            result.append(cultivation.Grid.get(i).getR()).append("_");
+            result.append(cultivation.Grid.get(i).getC()).append("~");
         }
         return result.toString();
     }
@@ -40,11 +41,12 @@ public class SaveAndLoadHandling {
         for (String SplitGrid : splitGrid) {
             LOGGER.info("{}", SplitGrid);
             String[] cords = SplitGrid.split("_");
-            int x = Integer.parseInt(cords[0]);
-            int y = Integer.parseInt(cords[1]);
-            AxialCordinate axiom = new AxialCordinate(x, y);
+            int a = Integer.parseInt(cords[0]);
+            int r = Integer.parseInt(cords[1]);
+            int c = Integer.parseInt(cords[2]);
+            AxialCordinate axiom = new AxialCordinate(a, r, c);
             cult.Grid.add(axiom);
-            LOGGER.info("({}, {})", x, y);
+            LOGGER.info("({}, {}, {})", a, r, c);
         }
         return cult;
     }

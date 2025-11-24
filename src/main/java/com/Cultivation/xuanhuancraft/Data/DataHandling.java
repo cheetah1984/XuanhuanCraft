@@ -45,9 +45,13 @@ public class DataHandling {
         if (!DataList.containsKey(player)) {
             DataList.put(player, new Cultivation());
             Cultivation cult = DataList.get(player);
-            cult.Grid.add(new AxialCordinate(0, 1));
-            cult.Grid.add(new AxialCordinate(0, 0));
-            cult.Grid.add(new AxialCordinate(0, -1));
+            cult.Grid.add(new AxialCordinate(1, -1, 0));
+            cult.Grid.add(new AxialCordinate(0, -1, 1));
+            cult.Grid.add(new AxialCordinate(-1, 0, +1));
+            cult.Grid.add(new AxialCordinate(1, 0, -1));
+            cult.Grid.add(new AxialCordinate(0  , 0, 0));
+            cult.Grid.add(new AxialCordinate(-1, +1, 0));
+            cult.Grid.add(new AxialCordinate(0, +1, -1));
             DataList.replace(player,cult);
 
         }
@@ -93,5 +97,37 @@ public class DataHandling {
         else {
             return new String(Base64.getDecoder().decode(input.getBytes()));
         }
+    }
+
+    public static int[] ConvertToHex(double x, double y)
+    {
+        double a = x/1.5;
+        double r = (y / Math.sqrt(3)) - (a / 2.0);
+        double c = -a -r;
+
+        // cube rounding
+        int ra = (int) Math.round(a);
+        int rr = (int) Math.round(r);
+        int rc = (int) Math.round(c);
+
+        double da = Math.abs(ra - a);
+        double dr = Math.abs(rr - r);
+        double dc = Math.abs(rc - c);
+
+        if (da > dr && da > dc)
+        {
+            ra = -rr - rc;
+        }
+        else if (dr > dc)
+        {
+            rr = -ra - rc;
+        }
+        else
+        {
+            rc = -ra - rr;
+        }
+
+        return new int[]{ra, rr, rc};
+
     }
 }
