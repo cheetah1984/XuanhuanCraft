@@ -2,6 +2,8 @@ package com.Cultivation.xuanhuancraft.Data;
 
 import com.Cultivation.xuanhuancraft.DataStructures.AxialCordinate;
 import com.Cultivation.xuanhuancraft.DataStructures.Cultivation;
+import com.Cultivation.xuanhuancraft.DataStructures.CultivationTile;
+import com.Cultivation.xuanhuancraft.Gameplay.TileType;
 import com.mojang.logging.LogUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import org.slf4j.Logger;
@@ -45,9 +47,13 @@ public class DataHandling {
         if (!DataList.containsKey(player)) {
             DataList.put(player, new Cultivation());
             Cultivation cult = DataList.get(player);
-            cult.Grid.add(new AxialCordinate(0, 1));
-            cult.Grid.add(new AxialCordinate(0, 0));
-            cult.Grid.add(new AxialCordinate(0, -1));
+            CultivationTile path = new CultivationTile(0, TileType.PATH);
+            CultivationTile sink = new CultivationTile(0, TileType.SINK);
+            CultivationTile source = new CultivationTile(0, TileType.SOURCE);
+
+            cult.Grid.add(new AxialCordinate(0, 1, path));
+            cult.Grid.add(new AxialCordinate(0, 0, sink));
+            cult.Grid.add(new AxialCordinate(0, -1, source));
             DataList.replace(player,cult);
 
         }
@@ -64,7 +70,7 @@ public class DataHandling {
             LOGGER.error("ERROR: IOException catch was Triggered On Save(), Data will NOT load correctly (DataHandling.java)");
             LOGGER.error(Arrays.toString(e.getStackTrace()));
         }
-        LOGGER.info("'{}.clicker' was updated (Data Save)", player.getUuid());
+        LOGGER.info("'{}.cult' was updated (Data Save)", player.getUuid());
     }
 
     public static void Load(PlayerEntity player) {
@@ -92,6 +98,15 @@ public class DataHandling {
         }
         else {
             return new String(Base64.getDecoder().decode(input.getBytes()));
+        }
+    }
+
+    public static void TickHexGrid(PlayerEntity player)
+    {
+        Cultivation cultivation = DataList.get(player);
+        if (cultivation != null)
+        {
+            cultivation.getHexGridGame().tick();
         }
     }
 }
