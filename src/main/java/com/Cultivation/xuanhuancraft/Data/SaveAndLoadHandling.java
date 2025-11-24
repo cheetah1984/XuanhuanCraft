@@ -2,9 +2,14 @@ package com.Cultivation.xuanhuancraft.Data;
 
 import com.Cultivation.xuanhuancraft.DataStructures.AxialCordinate;
 import com.Cultivation.xuanhuancraft.DataStructures.Cultivation;
+import com.Cultivation.xuanhuancraft.DataStructures.CultivationTile;
+import com.Cultivation.xuanhuancraft.Gameplay.BaseElement;
+import com.Cultivation.xuanhuancraft.Gameplay.TileType;
 import com.mojang.logging.LogUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import org.slf4j.Logger;
+
+import java.util.StringJoiner;
 
 public class SaveAndLoadHandling {
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -24,11 +29,23 @@ public class SaveAndLoadHandling {
         StringBuilder result = new StringBuilder();
         Cultivation cultivation = DataHandling.DataList.get(player);
         result.append(cultivation.Qi).append(",");
-        for (int i = 0; i < cultivation.Grid.size(); i++)
+
+        StringJoiner gridJoiner = new StringJoiner("~");
+        for (AxialCordinate coordinate : cultivation.Grid)
         {
-            result.append(cultivation.Grid.get(i).getX()).append("_");
-            result.append(cultivation.Grid.get(i).getY()).append("~");
+            StringBuilder entry = new StringBuilder();
+            entry.append(coordinate.getX()).append("_").append(coordinate.getY());
+            CultivationTile tile = coordinate.getTile();
+            if (tile != null)
+            {
+                entry.append(":")
+                        .append(tile.getType().name()).append("|")
+                        .append(tile.getOrientation()).append("|")
+                        .append(tile.getFocusElement() == null ? "NONE" : tile.getFocusElement().name());
+            }
+            gridJoiner.add(entry.toString());
         }
+        result.append(gridJoiner);
         return result.toString();
     }
     // Turns a String back into Data
@@ -36,15 +53,39 @@ public class SaveAndLoadHandling {
         Cultivation cult = new Cultivation();
         String[] SplitData = data.split(",");
         cult.Qi = Double.valueOf(SplitData[0]);
-        String[] splitGrid = SplitData[1].split("~");
-        for (String SplitGrid : splitGrid) {
-            LOGGER.info("{}", SplitGrid);
-            String[] cords = SplitGrid.split("_");
-            int x = Integer.parseInt(cords[0]);
-            int y = Integer.parseInt(cords[1]);
-            AxialCordinate axiom = new AxialCordinate(x, y);
-            cult.Grid.add(axiom);
-            LOGGER.info("({}, {})", x, y);
+        if (SplitData.length > 1 && !SplitData[1].isEmpty())
+        {
+            String[] splitGrid = SplitData[1].split("~");
+            for (String SplitGrid : splitGrid)
+            {
+                if (SplitGrid.isEmpty())
+                {
+                    continue;
+                }
+                String[] coordinateAndTile = SplitGrid.split(":");
+                String[] cords = coordinateAndTile[0].split("_");
+                if (cords.length < 2)
+                {
+                    continue;
+                }
+                int x = Integer.parseInt(cords[0]);
+                int y = Integer.parseInt(cords[1]);
+                CultivationTile tile = null;
+                if (coordinateAndTile.length > 1 && !coordinateAndTile[1].isEmpty())
+                {
+                    String[] tileData = coordinateAndTile[1].split("\\|");
+                    if (tileData.length > 0 && !tileData[0].isEmpty())
+                    {
+                        TileType type = TileType.valueOf(tileData[0]);
+                        int orientation = tileData.length > 1 ? Integer.parseInt(tileData[1]) : 0;
+                        BaseElement focus = tileData.length > 2 && !tileData[2].equals("NONE") ? BaseElement.valueOf(tileData[2]) : null;
+                        tile = new CultivationTile(orientation, type);
+                        tile.setFocusElement(focus);
+                    }
+                }
+                AxialCordinate axiom = new AxialCordinate(x, y, tile);
+                cult.Grid.add(axiom);
+            }
         }
         return cult;
     }

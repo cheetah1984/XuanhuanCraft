@@ -31,4 +31,32 @@ public class AxialCordinate {
     {
         return this.tile;
     }
+
+    public void setTile(CultivationTile tile)
+    {
+        this.tile = tile;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        AxialCordinate that = (AxialCordinate) obj;
+        return x == that.x && y == that.y;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int result = Integer.hashCode(x);
+        result = 31 * result + Integer.hashCode(y);
+        return result;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "(" + x + ", " + y + ")";
+    }
 }
